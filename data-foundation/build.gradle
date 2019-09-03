@@ -12,7 +12,11 @@ buildscript {
 
 apply plugin: 'java-library'
 apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.alevadski'
+group = 'com.github.alevadski'
+
+configurations {
+    generatedCompile
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -25,21 +29,22 @@ targetCompatibility = "7"
 
 def swaggerSourceFile = 'spec.yml'
 def swaggerTargetFolder = 'src/main/java'
+def modelPackage = 'com.anchorfree.datafoundation.generated'
 
 task generateApi {
     inputs.file("$projectDir/$swaggerSourceFile")
     outputs.dir("$projectDir/$swaggerTargetFolder")
     doLast {
         def config = new CodegenConfigurator()
-        config.setInputSpec("file:///$projectDir/$swaggerSourceFile")
+        config.setInputSpec("$projectDir/$swaggerSourceFile")
         config.setOutputDir("$projectDir")
         config.setLang('java')
         config.setAdditionalProperties([
-                'interfaceOnly': true,
-                'generateModelDocs': false,
+                'interfaceOnly'     : true,
+                'generateModelDocs' : false,
                 'enumPropertyNaming': 'snake_case',
-                'modelPackage' : 'com.anchorfree.datafoundation.generated',
-                'sourceFolder' : swaggerTargetFolder
+                'modelPackage'      : modelPackage,
+                'sourceFolder'      : swaggerTargetFolder
         ])
         def generator = new DefaultGenerator()
         def configInput = config.toClientOptInput()
@@ -51,3 +56,26 @@ task generateApi {
         }
     }
 }
+
+clean.doFirst {
+    delete("${projectDir}/$swaggerTargetFolder/com/anchorfree/datafoundation/generated")
+    delete("${projectDir}/docs")
+}
+
+sourceSets {
+    generated {
+        compileClasspath = configurations.generatedCompile
+    }
+    main {
+        compileClasspath += generated.output
+        runtimeClasspath += generated.output
+    }
+    test {
+        compileClasspath += generated.output
+        runtimeClasspath += generated.output
+    }
+}
+
+compileGeneratedJava.dependsOn generateApi
+classes.dependsOn generatedClasses
+compileJava.dependsOn compileGeneratedJava
