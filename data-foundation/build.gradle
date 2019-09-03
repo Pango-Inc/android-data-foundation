@@ -1,0 +1,53 @@
+import io.swagger.codegen.DefaultGenerator
+import io.swagger.codegen.config.CodegenConfigurator
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath('io.swagger:swagger-codegen:2.3.0')
+    }
+}
+
+apply plugin: 'java-library'
+apply plugin: 'com.github.dcendents.android-maven'
+group='com.github.alevadski'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'io.swagger:swagger-annotations:1.5.22'
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
+
+def swaggerSourceFile = 'spec.yml'
+def swaggerTargetFolder = 'src/main/java'
+
+task generateApi {
+    inputs.file("$projectDir/$swaggerSourceFile")
+    outputs.dir("$projectDir/$swaggerTargetFolder")
+    doLast {
+        def config = new CodegenConfigurator()
+        config.setInputSpec("file:///$projectDir/$swaggerSourceFile")
+        config.setOutputDir("$projectDir")
+        config.setLang('java')
+        config.setAdditionalProperties([
+                'interfaceOnly': true,
+                'generateModelDocs': false,
+                'enumPropertyNaming': 'snake_case',
+                'modelPackage' : 'com.anchorfree.datafoundation.generated',
+                'sourceFolder' : swaggerTargetFolder
+        ])
+        def generator = new DefaultGenerator()
+        def configInput = config.toClientOptInput()
+        def opts = generator.opts(configInput)
+        try {
+            opts.generate()
+        } catch (Exception e) {
+            print("Generator throws exception: " + e)
+        }
+    }
+}
