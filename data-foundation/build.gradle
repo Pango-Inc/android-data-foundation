@@ -1,18 +1,16 @@
-import io.swagger.codegen.DefaultGenerator
-import io.swagger.codegen.config.CodegenConfigurator
-
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath('io.swagger:swagger-codegen:2.3.0')
+        classpath "org.openapitools:openapi-generator-gradle-plugin:4.1.2"
     }
 }
 
 apply plugin: 'java-library'
 apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.alevadski'
+apply plugin: 'org.openapi.generator'
 
 configurations {
     generatedCompile
@@ -21,40 +19,37 @@ configurations {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'io.swagger:swagger-annotations:1.5.22'
+    implementation 'io.swagger:swagger-annotations:1.5.23'
+    implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
 sourceCompatibility = "7"
 targetCompatibility = "7"
 
 def swaggerSourceFile = 'spec.yml'
-def swaggerTargetFolder = 'src/main/java'
-def modelPackage = 'com.anchorfree.datafoundation.generated'
+def swaggerTargetFolder = 'src/main/'
 
-task generateApi {
-    inputs.file("$projectDir/$swaggerSourceFile")
-    outputs.dir("$projectDir/$swaggerTargetFolder")
-    doLast {
-        def config = new CodegenConfigurator()
-        config.setInputSpec("$projectDir/$swaggerSourceFile")
-        config.setOutputDir("$projectDir")
-        config.setLang('java')
-        config.setAdditionalProperties([
-                'interfaceOnly'     : true,
-                'generateModelDocs' : false,
-                'enumPropertyNaming': 'snake_case',
-                'modelPackage'      : modelPackage,
-                'sourceFolder'      : swaggerTargetFolder
-        ])
-        def generator = new DefaultGenerator()
-        def configInput = config.toClientOptInput()
-        def opts = generator.opts(configInput)
-        try {
-            opts.generate()
-        } catch (Exception e) {
-            print("Generator throws exception: " + e)
-        }
-    }
+task generateModels(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    generatorName = "java"
+    inputSpec = "$projectDir/$swaggerSourceFile".toString()
+    outputDir = "$projectDir".toString()
+    modelPackage = "com.anchorfree.datafoundation.model"
+    packageName = "com.anchorfree.datafoundation"
+    configOptions = [
+            dateLibrary: "java8"
+    ]
+    systemProperties = [
+            modelDocs: "false",
+            apis     : "false",
+            models   : ""
+    ]
+    skipValidateSpec = true
+    logToStderr = true
+    generateAliasAsModel = false
+    generateModelTests = false
+    enablePostProcessFile = false
 }
 
 clean.doFirst {
@@ -70,12 +65,8 @@ sourceSets {
         compileClasspath += generated.output
         runtimeClasspath += generated.output
     }
-    test {
-        compileClasspath += generated.output
-        runtimeClasspath += generated.output
-    }
 }
 
-compileGeneratedJava.dependsOn generateApi
+compileGeneratedJava.dependsOn generateModels
 classes.dependsOn generatedClasses
 compileJava.dependsOn compileGeneratedJava

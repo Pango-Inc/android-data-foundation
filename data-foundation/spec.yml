@@ -1,62 +1,273 @@
-swagger: "2.0"
+openapi: 3.0.1
 info:
   # Schema version
   version: 0.0.1
   title: Data Foundation
   description: Test Demo
-title: Events
-definitions:
-  # BaseEvent should be inherited by other events. It contains basic super properties required in each event.
-  BaseEvent:
-    discriminator: eventType
-    type: object
-    description: Base Event
-    required:
-      - device_hash
-      - client_ts
-      - seq_no
-      - app_name
-      - app_version
-      - reporting_version
-      - platform
-    properties:
-      device_hash:
-        type: string
-      client_ts:
-        type: integer
-        format: int64
-      seq_no:
-        type: integer
-      app_name:
-        type: string
-      app_version:
-        type: string
-      reporting_version:
-        type: string
-        # FIXME: figure another way.
-        # defaultValue + custom mustache template
-        enum: ['0.0.1']
-      platform:
-        type: string
-        enum: [ios, android]
-      eventType:
-        type: string
-        default: 'BaseEvent'
-  UiClick:
-    type: object
-    description: UI Click event
-    allOf:
-      - $ref: '#/definitions/BaseEvent'
-      - required:
-          - is_premium
-          - event_name
-        properties:
-          event_name:
-            type: string
-            enum: ['ui_click']
-          is_premium:
-            type: integer
-          experiments:
-            type: object
-          notes:
-            type: object
+paths: {}
+components:
+  schemas:
+    BaseEvent:
+      type: object
+      description: Base Event
+      required:
+        - device_hash
+        - client_ts
+        - seq_no
+        - app_name
+        - app_version
+        - reporting_version
+        - platform
+      properties:
+        device_hash:
+          type: string
+        client_ts:
+          type: integer
+          format: int64
+        seq_no:
+          type: integer
+        app_name:
+          type: string
+        app_version:
+          type: string
+        reporting_version:
+          $ref: "#/definitions/ReportingVersion"
+        platform:
+          $ref: "#/definitions/PlatformType"
+    UiClick:
+      allOf:
+        - $ref: "#/components/schemas/BaseEvent"
+        - type: object
+          properties:
+            event_name:
+              $ref: "#/definitions/EventType"
+            is_premium:
+              type: integer
+            experiments:
+              type: string
+            notes:
+              type: string
+    ReportingVersion:
+      enum: ["0.0.1"]
+    PlatformType:
+      enum: [ios, android]
+    EventType:
+      enum: ["ui_click"]
+    ExperimentsType:
+      type: string
+    ScreenID:
+      enum:
+        - "scn_allow_notifications"
+        - "scn_about"
+        - "scn_app_access"
+        - "scn_connection"
+        - "scn_dashboard"
+        - "scn_devices"
+        - "scn_navigation_drawer"
+        - "scn_faq"
+        - "scn_feedback"
+        - "scn_feedback_thanks"
+        - "scn_first_disconnect"
+        - "scn_forgot_password"
+        - "scn_help"
+        - "scn_libraries_we_use"
+        - "scn_trial"
+        - "scn_trial_slide"
+        - "scn_second_optin"
+        - "scn_profile"
+        - "scn_account"
+        - "scn_subscription"
+        - "scn_promo_create"
+        - "scn_promo_upgrade"
+        - "scn_sign_in"
+        - "scn_sign_up"
+        - "scn_splash"
+        - "scn_tools"
+        - "scn_trackers"
+        - "scn_tracker_details"
+        - "scn_websites"
+        - "scn_website_details"
+        - "scn_virtual_location"
+        - "scn_settings"
+        - "scn_share"
+        - "scn_privacy_policy"
+        - "scn_terms_of_service"
+        - "scn_privacy_faq_screen"
+        - "scn_about_subscription_screen"
+        - "bnr_time_counter"
+        - "scn_time_limit_intro"
+        - "scn_data_consent"
+        - "scn_policy_updating"
+        - "scr_notifications_permissions"
+    DialogID:
+      enum:
+        - "dlg_update_available"
+        - "dlg_update_required"
+        - "dlg_rate"
+        - "dlg_review"
+        - "dlg_sign_out"
+        - "dlg_sign_out_error"
+        - "dlg_trackers"
+        - "dlg_websites"
+        - "dlg_tracker_blocking_off"
+        - "dlg_website_unblock"
+        - "dlg_notifications_permissions"
+        - "dlg_share"
+        - "dlg_connection_mode_selector"
+    ActionID:
+      enum:
+        - "btn_allow"
+        - "btn_about"
+        - "btn_account"
+        - "btn_back"
+        - "btn_block_trackers"
+        - "btn_cancel"
+        - "btn_close"
+        - "btn_connect"
+        - "btn_connection_mode"
+        - "btn_disconnect"
+        - "btn_install_profile"
+        - "btn_connection_problem"
+        - "btn_devices"
+        - "btn_drawer"
+        - "btn_faq"
+        - "btn_forgot_password"
+        - "btn_help"
+        - "btn_keep_on"
+        - "btn_turn_on"
+        - "btn_turn_off"
+        - "btn_libraries_we_use"
+        - "btn_membership"
+        - "btn_profile"
+        - "btn_vpn"
+        - "btn_menu"
+        - "btn_ok"
+        - "btn_other_problem"
+        - "btn_privacy_policy"
+        - "btn_blog"
+        - "btn_rate"
+        - "btn_restore_purchase"
+        - "btn_review"
+        - "btn_send"
+        - "btn_settings"
+        - "btn_server_locations"
+        - "btn_sign_in"
+        - "btn_sign_out"
+        - "btn_sign_up"
+        - "btn_speed_problem"
+        - "btn_start_trial"
+        - "btn_start_subscription"
+        - "btn_tools"
+        - "btn_terms_of_service"
+        - "btn_trackers"
+        - "btn_tracker_details"
+        - "btn_trackers_info"
+        - "btn_unblock_website"
+        - "btn_upgrade"
+        - "btn_virtual_location"
+        - "btn_websites"
+        - "btn_website_details"
+        - "btn_websites_info"
+        - "btn_share"
+        - "btn_info"
+        - "btn_got_it"
+        - "btn_tap_accept_continue"
+        - "btn_update"
+        - "btn_not_now"
+        - "btn_notifications_allow"
+        - "bnt_notifications_deny"
+        - "btn_go_to_settings"
+        - "btn_go_premium_freemium"
+        - "btn_auto"
+        - "btn_ikev2"
+        - "btn_stay_connected"
+        - "btn_fast"
+    EventID:
+      enum:
+        - "ad_loaded"
+        - "ad_requested"
+        - "ad_viewed"
+        - "api_response"
+        - "app_attribution"
+        - "app_start"
+        - "ui_view"
+        - "ui_click"
+        - "view_version"
+        - "purchase_request"
+        - "purchase_response"
+        - "notification_click"
+        - "notification_receive"
+        - "other_report"
+        - "sd_report"
+        - "action"
+        - "action_category"
+        - "action_detail"
+        - "action_name"
+        - "ad_adapter_name"
+        - "ad_adapter_pid"
+        - "ad_id"
+        - "ad_type"
+        - "advertiser"
+        - "advertiser_id"
+        - "af_hash"
+        - "af_token"
+        - "afg_report"
+        - "app_build"
+        - "app_name"
+        - "category"
+        - "client_config_source"
+        - "connection_end"
+        - "connection_start"
+        - "detail"
+        - "dist_channel"
+        - "duration"
+        - "duration_ms"
+        - "epoch"
+        - "error"
+        - "error_code"
+        - "extra"
+        - "failed_servers"
+        - "first"
+        - "flags"
+        - "hs"
+        - "hydra_version"
+        - "installation_time"
+        - "msg_id"
+        - "msg_text"
+        - "msg_type"
+        - "name"
+        - "network_hash"
+        - "notes"
+        - "number"
+        - "package_id"
+        - "placement"
+        - "placement_id"
+        - "purchase_id"
+        - "purchase_type"
+        - "reason_detail"
+        - "route_id"
+        - "sample_chance"
+        - "sampled"
+        - "sd_config_source"
+        - "server_protocol"
+        - "sim_country"
+        - "sku"
+        - "source"
+        - "source_action"
+        - "source_placement"
+        - "store_response"
+        - "text"
+        - "time"
+        - "tracker_blocking"
+        - "transaction_id"
+        - "ucr_experiments"
+        - "ucr_hydra_mode"
+        - "unknown_sources_enabled"
+        - "user_type"
+        - "username"
+        - "vendor_order_id"
+        - "version"
+        - "vl_name"
+        - "vpn"
+        - "vpn_permission"
+        - "website_blocking"
