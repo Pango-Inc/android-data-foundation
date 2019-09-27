@@ -34,7 +34,7 @@ components:
           $ref: "#/definitions/ReportingVersion"
         platform:
           $ref: "#/definitions/PlatformType"
-    UiClick:
+    UIClick:
       allOf:
         - $ref: "#/components/schemas/BaseEvent"
         - type: object
@@ -46,6 +46,35 @@ components:
             experiments:
               type: string
             notes:
+              type: string
+            action_source:
+              type: string
+            view_detail:
+              type: string
+            view_version:
+              type: string
+            view_name:
+              type: string
+            view_source:
+              type: string
+    UIAction:
+      allOf:
+        - $ref: "#/components/schemas/BaseEvent"
+        - type: object
+          properties:
+            view_detail:
+              type: string
+            view_version:
+              type: string
+            view_name:
+              type: string
+            view_source:
+              type: string
+            sku:
+              type: string
+            action_name:
+              type: string
+            action_source:
               type: string
     ReportingVersion:
       enum: ["0.0.1"]
