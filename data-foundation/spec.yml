@@ -12,16 +12,27 @@ components:
       description: Base Event
       required:
         - device_hash
-        - client_ts
+        - ts
+        - app_start_time
         - seq_no
         - app_name
         - app_version
         - reporting_version
+        - app_release
+        - app_build
         - platform
+        - experiments
+        - state_indicators
+        - country_vl
+        - os
+        - os_version
       properties:
         device_hash:
           type: string
-        client_ts:
+        ts:
+          type: integer
+          format: int64
+        app_start_time:
           type: integer
           format: int64
         seq_no:
@@ -32,271 +43,246 @@ components:
           type: string
         reporting_version:
           $ref: "#/definitions/ReportingVersion"
+        app_release:
+          type: string
+        app_build:
+          type: string
         platform:
           $ref: "#/definitions/PlatformType"
-    UIClick:
+        experiments:
+          type: string
+        state_indicators:
+          $ref: "#/definitions/StateIndicators"
+        country_vl:
+          type: string
+        os:
+          type: string
+        os_version:
+          type: string
+        notes:
+          type: string
+    DeviceProperties:
+      type: object
+      properties:
+        sim_country:
+          type: string
+        device_language:
+          type: string
+        store_country:
+          type: string
+        app_language:
+          type: string
+        manufacturer:
+          type: string
+        brand:
+          type: string
+        model:
+          type: string
+        carrier:
+          type: string
+        screen_height:
+          type: integer
+        screen_width:
+          type: integer
+    UIView:
       allOf:
         - $ref: "#/components/schemas/BaseEvent"
         - type: object
           properties:
-            event_name:
-              $ref: "#/definitions/EventType"
-            is_premium:
-              type: integer
-            experiments:
-              type: string
-            notes:
-              type: string
             action_source:
-              type: string
+              $ref: "#/definitions/ActionID"
+            view_source:
+              $ref: "#/definitions/ViewID"
             view_detail:
               type: string
             view_version:
               type: string
             view_name:
-              type: string
-            view_source:
-              type: string
+              $ref: "#/definitions/ViewID"
     UIAction:
       allOf:
         - $ref: "#/components/schemas/BaseEvent"
         - type: object
           properties:
+            action_detail:
+              type: string
+            action_name:
+              $ref: "#/definitions/ActionID"
+            action_source:
+              $ref: "#/definitions/ActionID"
             view_detail:
               type: string
             view_version:
               type: string
             view_name:
-              type: string
+              $ref: "#/definitions/ViewID"
             view_source:
-              type: string
+              $ref: "#/definitions/ViewID"
             sku:
               type: string
-            action_name:
+    AppStart:
+      allOf:
+        - $ref: "#/components/schemas/BaseEvent"
+        - type: object
+          properties:
+            device_properties:
+              $ref: "#/definitions/DeviceProperties"
+            source:
+              $ref: "#/definitions/LaunchSource"
+    AppAttribution:
+      allOf:
+        - $ref: "#/components/schemas/BaseEvent"
+        - type: object
+          properties:
+            device_properties:
+              $ref: "#/definitions/DeviceProperties"
+            source:
+              $ref: "#/definitions/AttributionSource"
+    ApiResponse:
+      allOf:
+        - $ref: "#/components/schemas/BaseEvent"
+        - type: object
+          properties:
+            token:
               type: string
-            action_source:
+            network_hash:
+              type: string
+            source:
+              $ref: "#/definitions/ApiResponseSource"
+            api_id:
+              type: string
+            duration:
+              type: integer
+            error_code:
+              type: integer
+            error:
+              type: string
+            sd_id:
+              type: string
+            unified_sd:
+              type: string
+            sd_config_source:
+              type: string
+            sd_in_tunnel:
+              type: string
+            network_availability:
               type: string
     ReportingVersion:
       enum: ["0.0.1"]
     PlatformType:
-      enum: [ios, android]
-    EventType:
-      enum: ["ui_click"]
-    ExperimentsType:
-      type: string
-    ScreenID:
+      enum: [ios, android, macos, windows, chrome]
+    LaunchSource:
       enum:
-        - "scn_allow_notifications"
-        - "scn_about"
-        - "scn_app_access"
-        - "scn_connection"
-        - "scn_dashboard"
-        - "scn_devices"
-        - "scn_navigation_drawer"
-        - "scn_faq"
-        - "scn_feedback"
-        - "scn_feedback_thanks"
-        - "scn_first_disconnect"
-        - "scn_forgot_password"
-        - "scn_help"
-        - "scn_libraries_we_use"
-        - "scn_trial"
-        - "scn_trial_slide"
-        - "scn_second_optin"
-        - "scn_profile"
-        - "scn_account"
-        - "scn_subscription"
-        - "scn_promo_create"
-        - "scn_promo_upgrade"
-        - "scn_sign_in"
-        - "scn_sign_up"
-        - "scn_splash"
-        - "scn_tools"
-        - "scn_trackers"
-        - "scn_tracker_details"
-        - "scn_websites"
-        - "scn_website_details"
-        - "scn_virtual_location"
-        - "scn_settings"
-        - "scn_share"
-        - "scn_privacy_policy"
-        - "scn_terms_of_service"
-        - "scn_privacy_faq_screen"
-        - "scn_about_subscription_screen"
-        - "bnr_time_counter"
-        - "scn_time_limit_intro"
-        - "scn_data_consent"
-        - "scn_policy_updating"
-        - "scr_notifications_permissions"
-    DialogID:
+        - launch
+        - foreground
+    AttributionSource:
       enum:
-        - "dlg_update_available"
-        - "dlg_update_required"
-        - "dlg_rate"
-        - "dlg_review"
-        - "dlg_sign_out"
-        - "dlg_sign_out_error"
-        - "dlg_trackers"
-        - "dlg_websites"
-        - "dlg_tracker_blocking_off"
-        - "dlg_website_unblock"
-        - "dlg_notifications_permissions"
-        - "dlg_share"
-        - "dlg_connection_mode_selector"
+        - kochava
+        - adjust
+    ApiResponseSource:
+      enum:
+        - elite
+        - mydati
+        - cdms
+    StateIndicators:
+      type: object
+      properties:
+        fg_permission_on:
+          type: boolean
+        unknown_sources_enabled:
+          type: boolean
+        vpn_permission_on:
+          type: boolean
+        vpn_on:
+          type: boolean
+        tracker_blocking_on:
+          type: boolean
+        website_blocking_on:
+          type: boolean
+        ad_blocking_on:
+          type: boolean
+        user_status:
+          $ref: "#/definitions/UserStatus"
+        extra_packages:
+          type: string
+    UserStatus:
+      enum:
+        - free
+        - trial
+        - premium
+    ViewID:
+      enum:
+        - ntf_no_connection
+        - scn_account
+        - scn_bundle
+        - scn_dashboard
+        - scn_optin
+        - scn_paywall
+        - dlg_connection_rate
+        - dlg_forgot_password
+        - dlg_rate
+        - dlg_vl_explanation
+        - ntf_invalid_email
+        - scn_about
+        - scn_bad_connection_feedback
+        - scn_bad_connection_options
+        - scn_bad_connection_thanks
+        - scn_create_account
+        - scn_data_consent
+        - scn_forgot_password
+        - scn_go_browse
+        - scn_policy_updating
+        - scn_privacy_policy
+        - scn_profile
+        - scn_settings
+        - scn_sign_in
+        - scn_source_attributions
+        - scn_splash
+        - scn_vl_country_select
+        - scn_vpn_config
     ActionID:
       enum:
-        - "btn_allow"
-        - "btn_about"
-        - "btn_account"
-        - "btn_back"
-        - "btn_block_trackers"
-        - "btn_cancel"
-        - "btn_close"
-        - "btn_connect"
-        - "btn_connection_mode"
-        - "btn_disconnect"
-        - "btn_install_profile"
-        - "btn_connection_problem"
-        - "btn_devices"
-        - "btn_drawer"
-        - "btn_faq"
-        - "btn_forgot_password"
-        - "btn_help"
-        - "btn_keep_on"
-        - "btn_turn_on"
-        - "btn_turn_off"
-        - "btn_libraries_we_use"
-        - "btn_membership"
-        - "btn_profile"
-        - "btn_vpn"
-        - "btn_menu"
-        - "btn_ok"
-        - "btn_other_problem"
-        - "btn_privacy_policy"
-        - "btn_blog"
-        - "btn_rate"
-        - "btn_restore_purchase"
-        - "btn_review"
-        - "btn_send"
-        - "btn_settings"
-        - "btn_server_locations"
-        - "btn_sign_in"
-        - "btn_sign_out"
-        - "btn_sign_up"
-        - "btn_speed_problem"
-        - "btn_start_trial"
-        - "btn_start_subscription"
-        - "btn_tools"
-        - "btn_terms_of_service"
-        - "btn_trackers"
-        - "btn_tracker_details"
-        - "btn_trackers_info"
-        - "btn_unblock_website"
-        - "btn_upgrade"
-        - "btn_virtual_location"
-        - "btn_websites"
-        - "btn_website_details"
-        - "btn_websites_info"
-        - "btn_share"
-        - "btn_info"
-        - "btn_got_it"
-        - "btn_tap_accept_continue"
-        - "btn_update"
-        - "btn_not_now"
-        - "btn_notifications_allow"
-        - "bnt_notifications_deny"
-        - "btn_go_to_settings"
-        - "btn_go_premium_freemium"
-        - "btn_auto"
-        - "btn_ikev2"
-        - "btn_stay_connected"
-        - "btn_fast"
-    EventID:
-      enum:
-        - "ad_loaded"
-        - "ad_requested"
-        - "ad_viewed"
-        - "api_response"
-        - "app_attribution"
-        - "app_start"
-        - "ui_view"
-        - "ui_click"
-        - "view_version"
-        - "purchase_request"
-        - "purchase_response"
-        - "notification_click"
-        - "notification_receive"
-        - "other_report"
-        - "sd_report"
-        - "action"
-        - "action_category"
-        - "action_detail"
-        - "action_name"
-        - "ad_adapter_name"
-        - "ad_adapter_pid"
-        - "ad_id"
-        - "ad_type"
-        - "advertiser"
-        - "advertiser_id"
-        - "af_hash"
-        - "af_token"
-        - "afg_report"
-        - "app_build"
-        - "app_name"
-        - "category"
-        - "client_config_source"
-        - "connection_end"
-        - "connection_start"
-        - "detail"
-        - "dist_channel"
-        - "duration"
-        - "duration_ms"
-        - "epoch"
-        - "error"
-        - "error_code"
-        - "extra"
-        - "failed_servers"
-        - "first"
-        - "flags"
-        - "hs"
-        - "hydra_version"
-        - "installation_time"
-        - "msg_id"
-        - "msg_text"
-        - "msg_type"
-        - "name"
-        - "network_hash"
-        - "notes"
-        - "number"
-        - "package_id"
-        - "placement"
-        - "placement_id"
-        - "purchase_id"
-        - "purchase_type"
-        - "reason_detail"
-        - "route_id"
-        - "sample_chance"
-        - "sampled"
-        - "sd_config_source"
-        - "server_protocol"
-        - "sim_country"
-        - "sku"
-        - "source"
-        - "source_action"
-        - "source_placement"
-        - "store_response"
-        - "text"
-        - "time"
-        - "tracker_blocking"
-        - "transaction_id"
-        - "ucr_experiments"
-        - "ucr_hydra_mode"
-        - "unknown_sources_enabled"
-        - "user_type"
-        - "username"
-        - "vendor_order_id"
-        - "version"
-        - "vl_name"
-        - "vpn"
-        - "vpn_permission"
-        - "website_blocking"
+        - btn_about
+        - btn_account
+        - btn_allow
+        - btn_back
+        - btn_blog
+        - btn_bundle
+        - btn_cancel
+        - btn_close
+        - btn_connect
+        - btn_create_account
+        - btn_dashboard
+        - btn_feedback
+        - btn_forgot_password
+        - btn_get
+        - btn_help
+        - btn_manage_account
+        - btn_not_allow
+        - btn_ok
+        - btn_open
+        - btn_paywall
+        - btn_privacy_policy
+        - btn_proceed_basic
+        - btn_profile
+        - btn_rate
+        - btn_reinstall_profile
+        - btn_reset_password
+        - btn_restore_purchase
+        - btn_review
+        - btn_settings
+        - btn_sign_in
+        - btn_sign_out
+        - btn_source_attributions
+        - btn_start_subscription
+        - btn_start_trial
+        - btn_submit
+        - btn_terms_apply
+        - btn_terms_of_service
+        - btn_upgrade
+        - btn_vl_change
+        - btn_vl_info
+        - ncl_pango_banner
+        - scr_source_attributions
+        - swp_close
+        - swp_vl_change
