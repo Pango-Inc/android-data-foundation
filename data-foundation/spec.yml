@@ -26,6 +26,7 @@ components:
         - country_vl
         - os
         - os_version
+        - eventType
       properties:
         device_hash:
           type: string
@@ -42,7 +43,7 @@ components:
         app_version:
           type: string
         reporting_version:
-          $ref: "#/definitions/ReportingVersion"
+          type: string
         app_release:
           type: string
         app_build:
@@ -61,6 +62,10 @@ components:
           type: string
         notes:
           type: string
+        eventType:
+          type: string
+      discriminator:
+        propertyName: eventType
     DeviceProperties:
       type: object
       properties:
@@ -123,19 +128,17 @@ components:
     AppStart:
       allOf:
         - $ref: "#/components/schemas/BaseEvent"
+        - $ref: "#/definitions/DeviceProperties"
         - type: object
           properties:
-            device_properties:
-              $ref: "#/definitions/DeviceProperties"
             source:
               $ref: "#/definitions/LaunchSource"
     AppAttribution:
       allOf:
         - $ref: "#/components/schemas/BaseEvent"
+        - $ref: "#/definitions/DeviceProperties"
         - type: object
           properties:
-            device_properties:
-              $ref: "#/definitions/DeviceProperties"
             source:
               $ref: "#/definitions/AttributionSource"
     ApiResponse:
@@ -167,23 +170,21 @@ components:
               type: string
             network_availability:
               type: string
-    ReportingVersion:
-      enum: ["0.0.1"]
     PlatformType:
       enum: [ios, android, macos, windows, chrome]
     LaunchSource:
       enum:
-        - launch
         - foreground
+        - launch
     AttributionSource:
       enum:
-        - kochava
         - adjust
+        - kochava
     ApiResponseSource:
       enum:
+        - cdms
         - elite
         - mydati
-        - cdms
     StateIndicators:
       type: object
       properties:
@@ -212,25 +213,25 @@ components:
         - premium
     ViewID:
       enum:
-        - ntf_no_connection
-        - scn_account
-        - scn_bundle
-        - scn_dashboard
-        - scn_optin
-        - scn_paywall
         - dlg_connection_rate
         - dlg_forgot_password
         - dlg_rate
         - dlg_vl_explanation
         - ntf_invalid_email
+        - ntf_no_connection
         - scn_about
+        - scn_account
         - scn_bad_connection_feedback
         - scn_bad_connection_options
         - scn_bad_connection_thanks
+        - scn_bundle
         - scn_create_account
+        - scn_dashboard
         - scn_data_consent
         - scn_forgot_password
         - scn_go_browse
+        - scn_optin
+        - scn_paywall
         - scn_policy_updating
         - scn_privacy_policy
         - scn_profile
