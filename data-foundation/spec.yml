@@ -7,7 +7,7 @@ info:
 paths: {}
 components:
   schemas:
-    BaseEvent:
+    DataFoundationEvent:
       type: object
       description: Base Event
       required:
@@ -89,9 +89,9 @@ components:
           type: integer
         screen_width:
           type: integer
-    UIView:
+    UiViewEvent:
       allOf:
-        - $ref: "#/components/schemas/BaseEvent"
+        - $ref: "#/components/schemas/DataFoundationEvent"
         - type: object
           properties:
             action_source:
@@ -104,9 +104,9 @@ components:
               type: string
             view_name:
               $ref: "#/definitions/ViewID"
-    UIAction:
+    UiActionEvent:
       allOf:
-        - $ref: "#/components/schemas/BaseEvent"
+        - $ref: "#/components/schemas/DataFoundationEvent"
         - type: object
           properties:
             action_detail:
@@ -125,25 +125,25 @@ components:
               $ref: "#/definitions/ViewID"
             sku:
               type: string
-    AppStart:
+    AppStartEvent:
       allOf:
-        - $ref: "#/components/schemas/BaseEvent"
+        - $ref: "#/components/schemas/DataFoundationEvent"
         - $ref: "#/definitions/DeviceProperties"
         - type: object
           properties:
             source:
               $ref: "#/definitions/LaunchSource"
-    AppAttribution:
+    AppAttributionEvent:
       allOf:
-        - $ref: "#/components/schemas/BaseEvent"
+        - $ref: "#/components/schemas/DataFoundationEvent"
         - $ref: "#/definitions/DeviceProperties"
         - type: object
           properties:
             source:
               $ref: "#/definitions/AttributionSource"
-    ApiResponse:
+    ApiResponseEvent:
       allOf:
-        - $ref: "#/components/schemas/BaseEvent"
+        - $ref: "#/components/schemas/DataFoundationEvent"
         - type: object
           properties:
             token:
