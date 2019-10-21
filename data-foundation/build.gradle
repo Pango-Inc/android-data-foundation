@@ -9,7 +9,7 @@ buildscript {
 
 apply plugin: 'java-library'
 apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.alevadski'
+group = 'com.github.AnchorFree'
 apply plugin: 'org.openapi.generator'
 
 configurations {
