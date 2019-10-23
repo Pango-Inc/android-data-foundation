@@ -75,8 +75,6 @@ components:
           type: string
         store_country:
           type: string
-        app_language:
-          type: string
         manufacturer:
           type: string
         brand:
@@ -85,10 +83,18 @@ components:
           type: string
         carrier:
           type: string
+        screen_dpi:
+          type: integer
         screen_height:
           type: integer
         screen_width:
           type: integer
+        dist_channel:
+          type: string
+        channel_number:
+          type: integer
+        android_gs_ver:
+          type: string
     UiViewEvent:
       allOf:
         - $ref: "#/components/schemas/DataFoundationEvent"
