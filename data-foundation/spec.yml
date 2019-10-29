@@ -26,6 +26,16 @@ components:
         - country_vl
         - os
         - os_version
+        - sim_country
+        - device_language
+        - manufacturer
+        - brand
+        - model
+        - carrier
+        - screen_dpi
+        - screen_height
+        - screen_width
+        - store_country
         - eventType
       properties:
         device_hash:
@@ -45,7 +55,7 @@ components:
         reporting_version:
           type: string
         app_release:
-          type: string
+          type: integer
         app_build:
           type: string
         platform:
@@ -62,18 +72,9 @@ components:
           type: string
         notes:
           type: string
-        eventType:
-          type: string
-      discriminator:
-        propertyName: eventType
-    DeviceProperties:
-      type: object
-      properties:
         sim_country:
           type: string
         device_language:
-          type: string
-        store_country:
           type: string
         manufacturer:
           type: string
@@ -89,12 +90,12 @@ components:
           type: integer
         screen_width:
           type: integer
-        dist_channel:
+        store_country:
           type: string
-        channel_number:
-          type: integer
-        android_gs_ver:
+        eventType:
           type: string
+      discriminator:
+        propertyName: eventType
     UiViewEvent:
       allOf:
         - $ref: "#/components/schemas/DataFoundationEvent"
@@ -134,47 +135,22 @@ components:
     AppStartEvent:
       allOf:
         - $ref: "#/components/schemas/DataFoundationEvent"
-        - $ref: "#/definitions/DeviceProperties"
         - type: object
           properties:
             source:
               $ref: "#/definitions/LaunchSource"
+            dist_channel:
+              type: string
+            android_gs_ver:
+              type: string
     AppAttributionEvent:
       allOf:
         - $ref: "#/components/schemas/DataFoundationEvent"
-        - $ref: "#/definitions/DeviceProperties"
         - type: object
           properties:
             source:
               $ref: "#/definitions/AttributionSource"
-    ApiResponseEvent:
-      allOf:
-        - $ref: "#/components/schemas/DataFoundationEvent"
-        - type: object
-          properties:
-            token:
-              type: string
-            network_hash:
-              type: string
-            source:
-              $ref: "#/definitions/ApiResponseSource"
-            api_id:
-              type: string
-            duration:
-              type: integer
-            error_code:
-              type: integer
-            error:
-              type: string
-            sd_id:
-              type: string
-            unified_sd:
-              type: string
-            sd_config_source:
-              type: string
-            sd_in_tunnel:
-              type: string
-            network_availability:
+            dist_channel:
               type: string
     PlatformType:
       enum: [ios, android, macos, windows, chrome]
@@ -184,13 +160,7 @@ components:
         - launch
     AttributionSource:
       enum:
-        - adjust
         - kochava
-    ApiResponseSource:
-      enum:
-        - cdms
-        - elite
-        - mydati
     StateIndicators:
       type: object
       properties:
@@ -201,10 +171,6 @@ components:
         vpn_permission_on:
           type: boolean
         vpn_on:
-          type: boolean
-        tracker_blocking_on:
-          type: boolean
-        website_blocking_on:
           type: boolean
         ad_blocking_on:
           type: boolean

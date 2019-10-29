@@ -46,7 +46,7 @@ task generateModels(type: org.openapitools.generator.gradle.plugin.tasks.Generat
             apis              : "false",
             models            : "",
     ]
-    skipValidateSpec = true
+    skipValidateSpec = false
     logToStderr = true
     generateAliasAsModel = false
     generateModelTests = false
