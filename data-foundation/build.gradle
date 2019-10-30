@@ -20,13 +20,13 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'io.swagger:swagger-annotations:1.5.23'
-    implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation 'org.jetbrains:annotations:16.0.1'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
-sourceCompatibility = "7"
-targetCompatibility = "7"
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 def swaggerSourceFile = 'spec.yml'
 def swaggerTargetFolder = 'src/main/'
