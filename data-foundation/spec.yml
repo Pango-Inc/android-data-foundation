@@ -35,7 +35,6 @@ components:
         - screen_dpi
         - screen_height
         - screen_width
-        - store_country
         - eventType
       properties:
         device_hash:
@@ -90,8 +89,6 @@ components:
           type: integer
         screen_width:
           type: integer
-        store_country:
-          type: string
         eventType:
           type: string
       discriminator:
@@ -102,15 +99,15 @@ components:
         - type: object
           properties:
             action_source:
-              $ref: "#/definitions/ActionID"
+              $ref: "#/definitions/ActionId"
             view_source:
-              $ref: "#/definitions/ViewID"
+              $ref: "#/definitions/ViewId"
             view_detail:
               type: string
             view_version:
               type: string
             view_name:
-              $ref: "#/definitions/ViewID"
+              $ref: "#/definitions/ViewId"
     UiActionEvent:
       allOf:
         - $ref: "#/components/schemas/DataFoundationEvent"
@@ -119,17 +116,17 @@ components:
             action_detail:
               type: string
             action_name:
-              $ref: "#/definitions/ActionID"
+              $ref: "#/definitions/ActionId"
             action_source:
-              $ref: "#/definitions/ActionID"
+              $ref: "#/definitions/ActionId"
             view_detail:
               type: string
             view_version:
               type: string
             view_name:
-              $ref: "#/definitions/ViewID"
+              $ref: "#/definitions/ViewId"
             view_source:
-              $ref: "#/definitions/ViewID"
+              $ref: "#/definitions/ViewId"
             sku:
               type: string
     AppStartEvent:
@@ -172,8 +169,6 @@ components:
           type: boolean
         vpn_on:
           type: boolean
-        ad_blocking_on:
-          type: boolean
         user_status:
           $ref: "#/definitions/UserStatus"
         extra_packages:
@@ -183,7 +178,7 @@ components:
         - free
         - trial
         - premium
-    ViewID:
+    ViewId:
       enum:
         - dlg_connection_rate
         - dlg_forgot_password
@@ -213,7 +208,7 @@ components:
         - scn_splash
         - scn_vl_country_select
         - scn_vpn_config
-    ActionID:
+    ActionId:
       enum:
         - btn_about
         - btn_account
