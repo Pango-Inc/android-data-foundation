@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   # Schema version
-  version: 0.0.1
+  version: 1.0.0
   title: Data Foundation
   description: Test Demo
 paths: {}
@@ -9,7 +9,20 @@ components:
   schemas:
     DataFoundationEvent:
       type: object
-      description: Base Event
+      required:
+        - event
+        - ts
+        - payload
+      properties:
+        event:
+          type: string
+        ts:
+          type: integer
+          format: int64
+        payload:
+          $ref: "#/components/schemas/EventPayload"
+    EventPayload:
+      type: object
       required:
         - device_hash
         - ts
@@ -53,16 +66,17 @@ components:
           type: string
         reporting_version:
           type: string
+          enum: ["1.0.0"]
         app_release:
           type: integer
         app_build:
           type: string
         platform:
-          $ref: "#/definitions/PlatformType"
+          $ref: "#/components/schemas/PlatformType"
         experiments:
           type: string
         state_indicators:
-          $ref: "#/definitions/StateIndicators"
+          $ref: "#/components/schemas/StateIndicators"
         country_vl:
           type: string
         os:
@@ -93,60 +107,60 @@ components:
           type: string
       discriminator:
         propertyName: eventType
-    UiViewEvent:
+    UiViewEventPayload:
       allOf:
-        - $ref: "#/components/schemas/DataFoundationEvent"
+        - $ref: "#/components/schemas/EventPayload"
         - type: object
           properties:
             action_source:
-              $ref: "#/definitions/ActionId"
+              $ref: "#/components/schemas/ActionId"
             view_source:
-              $ref: "#/definitions/ViewId"
+              $ref: "#/components/schemas/ViewId"
             view_detail:
               type: string
             view_version:
               type: string
             view_name:
-              $ref: "#/definitions/ViewId"
-    UiActionEvent:
+              $ref: "#/components/schemas/ViewId"
+    UiActionEventPayload:
       allOf:
-        - $ref: "#/components/schemas/DataFoundationEvent"
+        - $ref: "#/components/schemas/EventPayload"
         - type: object
           properties:
             action_detail:
               type: string
             action_name:
-              $ref: "#/definitions/ActionId"
+              $ref: "#/components/schemas/ActionId"
             action_source:
-              $ref: "#/definitions/ActionId"
+              $ref: "#/components/schemas/ActionId"
             view_detail:
               type: string
             view_version:
               type: string
             view_name:
-              $ref: "#/definitions/ViewId"
+              $ref: "#/components/schemas/ViewId"
             view_source:
-              $ref: "#/definitions/ViewId"
+              $ref: "#/components/schemas/ViewId"
             sku:
               type: string
-    AppStartEvent:
+    AppStartEventPayload:
       allOf:
-        - $ref: "#/components/schemas/DataFoundationEvent"
+        - $ref: "#/components/schemas/EventPayload"
         - type: object
           properties:
             source:
-              $ref: "#/definitions/LaunchSource"
+              $ref: "#/components/schemas/LaunchSource"
             dist_channel:
               type: string
             android_gs_ver:
               type: string
-    AppAttributionEvent:
+    AppAttributionEventPayload:
       allOf:
-        - $ref: "#/components/schemas/DataFoundationEvent"
+        - $ref: "#/components/schemas/EventPayload"
         - type: object
           properties:
             source:
-              $ref: "#/definitions/AttributionSource"
+              $ref: "#/components/schemas/AttributionSource"
             dist_channel:
               type: string
     PlatformType:
@@ -170,7 +184,7 @@ components:
         vpn_on:
           type: boolean
         user_status:
-          $ref: "#/definitions/UserStatus"
+          $ref: "#/components/schemas/UserStatus"
         extra_packages:
           type: string
     UserStatus:

@@ -38,7 +38,7 @@ task generateModels(type: org.openapitools.generator.gradle.plugin.tasks.Generat
     modelPackage = "com.anchorfree.datafoundation.model"
     packageName = "com.anchorfree.datafoundation"
     configOptions = [
-            dateLibrary: "java8",
+            dateLibrary       : "java8",
             enumPropertyNaming: "UPPERCASE"
     ]
     systemProperties = [
