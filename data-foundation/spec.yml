@@ -15,7 +15,7 @@ components:
         - payload
       properties:
         event:
-          type: string
+          $ref: "#/components/schemas/EventName"
         ts:
           type: integer
           format: int64
@@ -187,6 +187,12 @@ components:
           $ref: "#/components/schemas/UserStatus"
         extra_packages:
           type: string
+    EventName:
+      enum:
+        - ui_view
+        - ui_action
+        - app_start
+        - app_attribution
     UserStatus:
       enum:
         - free
